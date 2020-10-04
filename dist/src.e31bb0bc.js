@@ -117,16 +117,32 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"model.js":[function(require,module,exports) {
+})({"assets/1.png":[function(require,module,exports) {
+module.exports = "/1.9be96cb3.png";
+},{}],"model.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.model = void 0;
+
+var _ = _interopRequireDefault(require("./assets/1.png"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var model = [{
   type: 'title',
-  value: 'Hello World'
+  value: 'Конструктор сайтов на чистом JS',
+  options: {
+    tag: 'h1',
+    styles: {
+      background: 'linear-gradient(to right, #ff0099, #493240)',
+      color: '#fff',
+      'text-align': 'center',
+      padding: '1.5rem'
+    }
+  }
 }, {
   type: 'text',
   value: 'some text'
@@ -135,39 +151,76 @@ var model = [{
   value: ['1111111', '2222222', '3333333']
 }, {
   type: 'image',
-  value: './assets/1.png'
+  value: _.default
 }];
 exports.model = model;
+},{"./assets/1.png":"assets/1.png"}],"utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.row = row;
+exports.column = column;
+exports.css = css;
+
+function row(content) {
+  var styles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "<div class=\"row\" style=\"".concat(styles, "\">").concat(content, "</div>");
+}
+
+function column(content) {
+  return "<div class=\"col-sm\">".concat(content, "</div>");
+}
+
+function css() {
+  var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var toString = function toString(key) {
+    return "".concat(key, ": ").concat(styles[key]);
+  };
+
+  return Object.keys(styles).map(toString).join(';');
+}
 },{}],"templates.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.title = title;
-exports.text = text;
-exports.columns = columns;
-exports.image = image;
+exports.templates = void 0;
+
+var _utils = require("./utils");
 
 function title(block) {
-  return "\n        <div class=\"row\">\n                <div class=\"col-sm\">\n                    <h1>".concat(block.value, "</h1>\n                </div>\n            </div>\n    ");
+  var _block$options = block.options,
+      _block$options$tag = _block$options.tag,
+      tag = _block$options$tag === void 0 ? 'h1' : _block$options$tag,
+      styles = _block$options.styles;
+  return (0, _utils.row)((0, _utils.column)("<".concat(tag, ">").concat(block.value, "</").concat(tag, ">")), (0, _utils.css)(styles));
 }
 
 function text(block) {
-  return "\n         <div class=\"row\">\n            <div class=\"col-sm\">\n                <p>".concat(block.value, "</p>\n            </div>\n        </div>\n    ");
+  return (0, _utils.row)((0, _utils.column)("<p>".concat(block.value, "</p>")));
 }
 
 function columns(block) {
-  var html = block.value.map(function (item) {
-    return "<div class=\"col-sm\">".concat(item, "</div>");
-  });
-  return "\n    <div class=\"row\">\n        ".concat(html.join(''), "\n    </div>");
+  var html = block.value.map(_utils.column).join('');
+  return (0, _utils.row)(html);
 }
 
 function image(block) {
-  return "\n    <div class=\"row\">\n        <img src=".concat(block.value, " />\n    </div>\n    ");
+  return (0, _utils.row)("<img src=".concat(block.value, " />"));
 }
-},{}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+
+var templates = {
+  title: title,
+  text: text,
+  image: image,
+  columns: columns
+};
+exports.templates = templates;
+},{"./utils":"utils.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -251,19 +304,11 @@ require("./styles/main.css");
 var $site = document.querySelector('#site');
 
 _model.model.forEach(function (block) {
-  var html = '';
+  var toHtml = _templates.templates[block.type];
 
-  if (block.type === 'title') {
-    html = (0, _templates.title)(block);
-  } else if (block.type === 'text') {
-    html = (0, _templates.text)(block);
-  } else if (block.type === 'columns') {
-    html = (0, _templates.columns)(block);
-  } else if (block.type === 'image') {
-    html = (0, _templates.image)(block);
+  if (toHtml) {
+    $site.insertAdjacentHTML('beforeend', toHtml(block));
   }
-
-  $site.insertAdjacentHTML('beforeend', html);
 });
 },{"./model.js":"model.js","./templates.js":"templates.js","./styles/main.css":"styles/main.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

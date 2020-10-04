@@ -1,7 +1,19 @@
+import image from './assets/1.png'
+
 export const model = [
     {
         type: 'title',
-        value: 'Hello World'
+        value: 'Конструктор сайтов на чистом JS',
+        options: {
+            tag: 'h1',
+            styles:{
+                background: 'linear-gradient(to right, #ff0099, #493240)',
+                color: '#fff',
+                'text-align': 'center',
+                padding: '1.5rem'
+            }
+           
+        }
     },
     {
         type: 'text',
@@ -17,6 +29,6 @@ export const model = [
     },
     {
         type: 'image',
-        value: './assets/1.png'
+        value: image
     }
 ]
