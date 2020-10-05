@@ -117,76 +117,44 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"assets/1.png":[function(require,module,exports) {
-module.exports = "/1.9be96cb3.png";
-},{}],"classes/blocks.js":[function(require,module,exports) {
+})({"classes/site.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Block = void 0;
+exports.Site = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Block = function Block(type, value, options) {
-  _classCallCheck(this, Block);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.type = type;
-  this.value = value;
-  this.options = options;
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-exports.Block = Block;
-},{}],"model.js":[function(require,module,exports) {
-"use strict";
+var Site = /*#__PURE__*/function () {
+  function Site(selector) {
+    _classCallCheck(this, Site);
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.model = void 0;
-
-var _ = _interopRequireDefault(require("./assets/1.png"));
-
-var _blocks = require("./classes/blocks");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var model = [new _blocks.Block('title', 'Конструктор сайтов на чистом JS', {
-  tag: 'h1',
-  styles: {
-    background: 'linear-gradient(to right, #ff0099, #493240)',
-    color: '#fff',
-    'text-align': 'center',
-    padding: '1.5rem'
+    this.$el = document.querySelector(selector);
   }
-}), new _blocks.Block('text', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.', {
-  styles: {
-    background: 'linear-gradient(to left, #f2994a, #f2c94c)',
-    padding: '1rem',
-    'font-weight': 'bold'
-  }
-}), new _blocks.Block('columns', ['Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?'], {
-  styles: {
-    background: 'linear-gradient(to bottom, #8e2de2, #4a00e0)',
-    padding: '2rem',
-    color: '#fff',
-    'font-weight': 'bold'
-  }
-}), new _blocks.Block('image', _.default, {
-  styles: {
-    padding: '2rem 0',
-    display: 'flex',
-    'justify-content': 'center'
-  },
-  imageStyles: {
-    width: '500px',
-    height: 'auto'
-  },
-  alt: 'image'
-})];
-exports.model = model;
-},{"./assets/1.png":"assets/1.png","./classes/blocks":"classes/blocks.js"}],"utils.js":[function(require,module,exports) {
+
+  _createClass(Site, [{
+    key: "render",
+    value: function render(model) {
+      var _this = this;
+
+      this.$el.innerHTML = '';
+      model.forEach(function (block) {
+        _this.$el.insertAdjacentHTML('beforeend', block.toHtml());
+      });
+    }
+  }]);
+
+  return Site;
+}();
+
+exports.Site = Site;
+},{}],"utils.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -207,6 +175,7 @@ function column(content) {
 
 function css() {
   var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  if (typeof styles === 'string') return styles;
 
   var toString = function toString(key) {
     return "".concat(key, ": ").concat(styles[key]);
@@ -214,50 +183,321 @@ function css() {
 
   return Object.keys(styles).map(toString).join(';');
 }
-},{}],"templates.js":[function(require,module,exports) {
+},{}],"classes/blocks.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.templates = void 0;
+exports.ColumnsBlock = exports.TextBlock = exports.ImageBlock = exports.TitleBlock = exports.Block = void 0;
 
-var _utils = require("./utils");
+var _utils = require("./../utils");
 
-function title(block) {
-  var _block$options = block.options,
-      _block$options$tag = _block$options.tag,
-      tag = _block$options$tag === void 0 ? 'h1' : _block$options$tag,
-      styles = _block$options.styles;
-  return (0, _utils.row)((0, _utils.column)("<".concat(tag, ">").concat(block.value, "</").concat(tag, ">")), (0, _utils.css)(styles));
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Block = /*#__PURE__*/function () {
+  function Block(value, options) {
+    _classCallCheck(this, Block);
+
+    this.value = value;
+    this.options = options;
+  }
+
+  _createClass(Block, [{
+    key: "toHtml",
+    value: function toHtml() {
+      throw new Error('Метод toHtml должен быть реализован');
+    }
+  }]);
+
+  return Block;
+}();
+
+exports.Block = Block;
+
+var TitleBlock = /*#__PURE__*/function (_Block) {
+  _inherits(TitleBlock, _Block);
+
+  var _super = _createSuper(TitleBlock);
+
+  function TitleBlock(value, options) {
+    _classCallCheck(this, TitleBlock);
+
+    return _super.call(this, value, options);
+  }
+
+  _createClass(TitleBlock, [{
+    key: "toHtml",
+    value: function toHtml() {
+      var _this$options = this.options,
+          _this$options$tag = _this$options.tag,
+          tag = _this$options$tag === void 0 ? 'h1' : _this$options$tag,
+          styles = _this$options.styles;
+      return (0, _utils.row)((0, _utils.column)("<".concat(tag, ">").concat(this.value, "</").concat(tag, ">")), (0, _utils.css)(styles));
+    }
+  }]);
+
+  return TitleBlock;
+}(Block);
+
+exports.TitleBlock = TitleBlock;
+
+var ImageBlock = /*#__PURE__*/function (_Block2) {
+  _inherits(ImageBlock, _Block2);
+
+  var _super2 = _createSuper(ImageBlock);
+
+  function ImageBlock(value, options) {
+    _classCallCheck(this, ImageBlock);
+
+    return _super2.call(this, value, options);
+  }
+
+  _createClass(ImageBlock, [{
+    key: "toHtml",
+    value: function toHtml() {
+      var _this$options2 = this.options,
+          styles = _this$options2.styles,
+          alt = _this$options2.alt,
+          is = _this$options2.imageStyles;
+      return (0, _utils.row)("<img src=\"".concat(this.value, "\" alt=\"").concat(alt, "\" style=\"").concat((0, _utils.css)(is), "\" />"), (0, _utils.css)(styles));
+    }
+  }]);
+
+  return ImageBlock;
+}(Block);
+
+exports.ImageBlock = ImageBlock;
+
+var TextBlock = /*#__PURE__*/function (_Block3) {
+  _inherits(TextBlock, _Block3);
+
+  var _super3 = _createSuper(TextBlock);
+
+  function TextBlock(value, options) {
+    _classCallCheck(this, TextBlock);
+
+    return _super3.call(this, value, options);
+  }
+
+  _createClass(TextBlock, [{
+    key: "toHtml",
+    value: function toHtml() {
+      return (0, _utils.row)((0, _utils.column)("<p>".concat(this.value, "</p>")), (0, _utils.css)(this.options.styles));
+    }
+  }]);
+
+  return TextBlock;
+}(Block);
+
+exports.TextBlock = TextBlock;
+
+var ColumnsBlock = /*#__PURE__*/function (_Block4) {
+  _inherits(ColumnsBlock, _Block4);
+
+  var _super4 = _createSuper(ColumnsBlock);
+
+  function ColumnsBlock(value, options) {
+    _classCallCheck(this, ColumnsBlock);
+
+    return _super4.call(this, value, options);
+  }
+
+  _createClass(ColumnsBlock, [{
+    key: "toHtml",
+    value: function toHtml() {
+      var html = this.value.map(_utils.column).join('');
+      return (0, _utils.row)(html, (0, _utils.css)(this.options.styles));
+    }
+  }]);
+
+  return ColumnsBlock;
+}(Block);
+
+exports.ColumnsBlock = ColumnsBlock;
+},{"./../utils":"utils.js"}],"classes/sidebar.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.block = block;
+exports.SideBar = void 0;
+
+var _blocks = require("./blocks");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var SideBar = /*#__PURE__*/function () {
+  function SideBar(selector, updateCallback) {
+    _classCallCheck(this, SideBar);
+
+    this.$el = document.querySelector(selector);
+    this.update = updateCallback;
+    this.init();
+  }
+
+  _createClass(SideBar, [{
+    key: "init",
+    value: function init() {
+      this.$el.insertAdjacentHTML('afterbegin', this.template);
+      this.$el.addEventListener('submit', this.add.bind(this));
+    }
+  }, {
+    key: "add",
+    value: function add(event) {
+      event.preventDefault();
+      var type = event.target.name;
+      var value = event.target.value.value;
+      var styles = event.target.styles.value;
+      var newBlock = type === 'text' ? new _blocks.TextBlock(value, {
+        styles: styles
+      }) : new _blocks.TitleBlock(value, {
+        styles: styles
+      });
+      this.update(newBlock);
+      event.target.name = '';
+      event.target.value.value = '';
+      event.target.styles.value = '';
+    }
+  }, {
+    key: "template",
+    get: function get() {
+      return [block('text'), block('title')].join('');
+    }
+  }]);
+
+  return SideBar;
+}();
+
+exports.SideBar = SideBar;
+
+function block(type) {
+  return "\n    <form name=\"".concat(type, "\">\n        <h5>").concat(type, "</h5>\n        <div class=\"form-group\">\n            <input class=\"form-control form-control-sm\" name=\"value\" placeholder=\"value\">\n        </div>\n        <div class=\"form-group\">\n            <input class=\"form-control form-control-sm\" name=\"styles\" placeholder=\"styles\">\n        </div>\n        <button type=\"submit\" class=\"btn btn-primary brn-sm\">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C</button>\n        </form>\n        <hr />\n    ");
 }
+},{"./blocks":"classes/blocks.js"}],"classes/app.js":[function(require,module,exports) {
+"use strict";
 
-function text(block) {
-  return (0, _utils.row)((0, _utils.column)("<p>".concat(block.value, "</p>")), (0, _utils.css)(block.options.styles));
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.App = void 0;
 
-function columns(block) {
-  var styles = block.options.styles;
-  var html = block.value.map(_utils.column).join('');
-  return (0, _utils.row)(html, (0, _utils.css)(block.options.styles));
-}
+var _site = require("./site");
 
-function image(block) {
-  var _block$options2 = block.options,
-      styles = _block$options2.styles,
-      alt = _block$options2.alt,
-      is = _block$options2.imageStyles;
-  return (0, _utils.row)("<img src=\"".concat(block.value, "\" alt=\"").concat(alt, "\" style=\"").concat((0, _utils.css)(is), "\" />"), (0, _utils.css)(styles));
-}
+var _sidebar = require("./sidebar");
 
-var templates = {
-  title: title,
-  text: text,
-  image: image,
-  columns: columns
-};
-exports.templates = templates;
-},{"./utils":"utils.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var App = /*#__PURE__*/function () {
+  function App(model) {
+    _classCallCheck(this, App);
+
+    this.model = model;
+    this.init();
+  }
+
+  _createClass(App, [{
+    key: "init",
+    value: function init() {
+      var _this = this;
+
+      var site = new _site.Site('#site');
+      site.render(this.model);
+
+      var updateCallback = function updateCallback(newBlock) {
+        _this.model.push(newBlock);
+
+        site.render(_this.model);
+      };
+
+      new _sidebar.SideBar('#panel', updateCallback);
+    }
+  }]);
+
+  return App;
+}();
+
+exports.App = App;
+},{"./site":"classes/site.js","./sidebar":"classes/sidebar.js"}],"assets/1.png":[function(require,module,exports) {
+module.exports = "/1.9be96cb3.png";
+},{}],"model.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.model = void 0;
+
+var _ = _interopRequireDefault(require("./assets/1.png"));
+
+var _blocks = require("./classes/blocks");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var model = [new _blocks.TitleBlock('Конструктор сайтов на чистом JS', {
+  tag: 'h1',
+  styles: {
+    background: 'linear-gradient(to right, #ff0099, #493240)',
+    color: '#fff',
+    'text-align': 'center',
+    padding: '1.5rem'
+  }
+}), new _blocks.TextBlock('Lorem, ipsum dolor sit amet consectetur adipisicing elit.', {
+  styles: {
+    background: 'linear-gradient(to left, #f2994a, #f2c94c)',
+    padding: '1rem',
+    'font-weight': 'bold'
+  }
+}), new _blocks.ColumnsBlock(['Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?'], {
+  styles: {
+    background: 'linear-gradient(to bottom, #8e2de2, #4a00e0)',
+    padding: '2rem',
+    color: '#fff',
+    'font-weight': 'bold'
+  }
+}), new _blocks.ImageBlock(_.default, {
+  styles: {
+    padding: '2rem 0',
+    display: 'flex',
+    'justify-content': 'center'
+  },
+  imageStyles: {
+    width: '500px',
+    height: 'auto'
+  },
+  alt: 'image'
+})];
+exports.model = model;
+},{"./assets/1.png":"assets/1.png","./classes/blocks":"classes/blocks.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -332,22 +572,14 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
-var _model = require("./model.js");
+var _app = require("./classes/app.js");
 
-var _templates = require("./templates.js");
+var _model = require("./model.js");
 
 require("./styles/main.css");
 
-var $site = document.querySelector('#site');
-
-_model.model.forEach(function (block) {
-  var toHtml = _templates.templates[block.type];
-
-  if (toHtml) {
-    $site.insertAdjacentHTML('beforeend', toHtml(block));
-  }
-});
-},{"./model.js":"model.js","./templates.js":"templates.js","./styles/main.css":"styles/main.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+new _app.App(_model.model);
+},{"./classes/app.js":"classes/app.js","./model.js":"model.js","./styles/main.css":"styles/main.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -375,7 +607,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62861" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
