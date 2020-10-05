@@ -119,6 +119,25 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"assets/1.png":[function(require,module,exports) {
 module.exports = "/1.9be96cb3.png";
+},{}],"classes/blocks.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Block = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Block = function Block(type, value, options) {
+  _classCallCheck(this, Block);
+
+  this.type = type;
+  this.value = value;
+  this.options = options;
+};
+
+exports.Block = Block;
 },{}],"model.js":[function(require,module,exports) {
 "use strict";
 
@@ -129,32 +148,45 @@ exports.model = void 0;
 
 var _ = _interopRequireDefault(require("./assets/1.png"));
 
+var _blocks = require("./classes/blocks");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var model = [{
-  type: 'title',
-  value: 'Конструктор сайтов на чистом JS',
-  options: {
-    tag: 'h1',
-    styles: {
-      background: 'linear-gradient(to right, #ff0099, #493240)',
-      color: '#fff',
-      'text-align': 'center',
-      padding: '1.5rem'
-    }
+var model = [new _blocks.Block('title', 'Конструктор сайтов на чистом JS', {
+  tag: 'h1',
+  styles: {
+    background: 'linear-gradient(to right, #ff0099, #493240)',
+    color: '#fff',
+    'text-align': 'center',
+    padding: '1.5rem'
   }
-}, {
-  type: 'text',
-  value: 'some text'
-}, {
-  type: 'columns',
-  value: ['1111111', '2222222', '3333333']
-}, {
-  type: 'image',
-  value: _.default
-}];
+}), new _blocks.Block('text', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.', {
+  styles: {
+    background: 'linear-gradient(to left, #f2994a, #f2c94c)',
+    padding: '1rem',
+    'font-weight': 'bold'
+  }
+}), new _blocks.Block('columns', ['Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Qui nesciunt beatae, quaerat culpa natus accusamus vero soluta a quis perspiciatis, voluptatum, eum illum in optio rem repellendus placeat dolorum? Quas?'], {
+  styles: {
+    background: 'linear-gradient(to bottom, #8e2de2, #4a00e0)',
+    padding: '2rem',
+    color: '#fff',
+    'font-weight': 'bold'
+  }
+}), new _blocks.Block('image', _.default, {
+  styles: {
+    padding: '2rem 0',
+    display: 'flex',
+    'justify-content': 'center'
+  },
+  imageStyles: {
+    width: '500px',
+    height: 'auto'
+  },
+  alt: 'image'
+})];
 exports.model = model;
-},{"./assets/1.png":"assets/1.png"}],"utils.js":[function(require,module,exports) {
+},{"./assets/1.png":"assets/1.png","./classes/blocks":"classes/blocks.js"}],"utils.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -201,16 +233,21 @@ function title(block) {
 }
 
 function text(block) {
-  return (0, _utils.row)((0, _utils.column)("<p>".concat(block.value, "</p>")));
+  return (0, _utils.row)((0, _utils.column)("<p>".concat(block.value, "</p>")), (0, _utils.css)(block.options.styles));
 }
 
 function columns(block) {
+  var styles = block.options.styles;
   var html = block.value.map(_utils.column).join('');
-  return (0, _utils.row)(html);
+  return (0, _utils.row)(html, (0, _utils.css)(block.options.styles));
 }
 
 function image(block) {
-  return (0, _utils.row)("<img src=".concat(block.value, " />"));
+  var _block$options2 = block.options,
+      styles = _block$options2.styles,
+      alt = _block$options2.alt,
+      is = _block$options2.imageStyles;
+  return (0, _utils.row)("<img src=\"".concat(block.value, "\" alt=\"").concat(alt, "\" style=\"").concat((0, _utils.css)(is), "\" />"), (0, _utils.css)(styles));
 }
 
 var templates = {
@@ -338,7 +375,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54936" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61043" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
